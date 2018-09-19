@@ -6,6 +6,8 @@ object Problems extends App{
    * Example:
    * scala> last(List(1, 1, 2, 3, 5, 8))
    * res0: Int = 8
+   * scala> last(List("Pepe", "Ana", "John"))
+   * res0: String = "John"
    * [T] ==> method can accept type String, Int, Double ....
    */
   def last[T](l: List[T]): T = {
@@ -21,8 +23,8 @@ object Problems extends App{
   }
   println(last(List(1, 1, 2, 3, 5, 8)))
   println(lastBuiltIn(List(1, 1, 2, 3, 5, 8)))
-  println(last(List()))
-  println(lastBuiltIn(List()))
+  println(last(List("Pepe", "Ana", "John")))
+  println(lastBuiltIn(List("Pepe", "Ana", "John")))
   
   /**
    * P02 (*) Find the last but one element of a list.
