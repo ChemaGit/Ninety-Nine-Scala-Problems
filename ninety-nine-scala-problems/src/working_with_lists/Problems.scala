@@ -130,4 +130,94 @@ object Problems extends App{
    * scala> reverse(List(1, 1, 2, 3, 5, 8))
    * res0: List[Int] = List(8, 5, 3, 2, 1, 1)
    */
+  def reverse[T](l: List[T]): List[T] = {
+    @annotation.tailrec
+    def loop[T](acum: List[T], ls: List[T]): List[T] = {
+      ls match {
+        case Nil => acum
+        case (h :: tail) => loop(h :: acum, tail)
+      }
+    }    
+    loop(List(), l)
+  }
+  
+  def reverseBuiltIn[T](l: List[T]): List[T] = {
+    l.reverse
+  }
+  //Pure functional
+  def reverseFunctional[T](l: List[T]): List[T] = {
+    l.foldLeft(List[T]())({case(r, h) => h :: r})
+  }
+  println("P05 " + reverse(List(1, 1, 2, 3, 5, 8)))  
+  println("P05 " + reverse(List("Ana", "Lucia","Sofia", "Marta")))
+  println("P05 " + reverse(List()))
+  println("P05 " + reverseBuiltIn(List(1, 1, 2, 3, 5, 8)))
+  println("P05 " + reverseBuiltIn(Nil))
+  println("P05 " + reverseFunctional(List("Ana", "Lucia","Sofia", "Marta")))
+  println("P05 " + reverse(List(1, 2, 3, 2, 1)))
+  println("P05 " + reverse(List('r', 'e', 'c', 'o', 'n','o','c','e','r')))
+  println("**********************************")  
+  
+  /**
+   * P06 (*) Find out whether a list is a palindrome.
+   * Example:
+   * scala> isPalindrome(List(1, 2, 3, 2, 1))
+   * scala> isPalindrome(List('r', 'e', 'c', 'o', 'n','o','c','e','r'))
+   * res0: Boolean = true
+   */
+  def isPalindrome[T](l: List[T]): Boolean = {
+    @annotation.tailrec
+    def loop[T](ls: List[T], inv: List[T]): Boolean = {
+      ls match {
+        case Nil => true
+        case (h :: tail) => if(h == inv.head) loop(tail, inv.tail)
+                            else false                  
+      }
+    }
+    if(l.isEmpty) true
+    else {
+      loop(l, reverse(l))
+    }    
+  }
+  
+  def isPalindromeB[T](l: List[T]): Boolean = {
+    l == reverse(l)
+  }  
+  println("P06 " + isPalindrome(List('r', 'e', 'c', 'o', 'n','o','c','e','r')))
+  println("P06 " + isPalindrome(List()))
+  println("P06 " + isPalindrome(List(1)))
+  println("P06 " + isPalindrome(List(1,2)))
+  println("P06 " + isPalindrome(List(1,2,1)))
+  println("**********************************") 
+  
+  /**
+   * P07 (**) Flatten a nested list structure.
+   * Example:
+   * scala> flatten(List(List(1, 1), 2, List(3, List(5, 8))))
+   * res0: List[Any] = List(1, 1, 2, 3, 5, 8)  
+   */
+  def flatten(l: List[Any]): List[Any] = {
+    l.flatMap({case(ls: List[_]) => flatten(ls)
+               case h => List(h)
+      })
+  }
+  
+  println("P07 " + flatten(List(List(1, 1), 2, List(3, List(5, 8)))))
+  println("**********************************")
+  
+  /**
+   * P08 (**) Eliminate consecutive duplicates of list elements.
+   * If a list contains repeated elements they should be replaced with a single copy of the element. The order of the elements should not be changed.
+   * Example:
+    
+   * scala> compress(List('a, 'a, 'a, 'a, 'b, 'c, 'c, 'a, 'a, 'd, 'e, 'e, 'e, 'e))
+   * res0: List[Symbol] = List('a, 'b, 'c, 'a, 'd, 'e)
+   */   
+  def compress[T](l: List[T]): List[T] = {
+    def loop[T](h: T, tail: List[T], acum: List[T]): List[T] = {
+      List()
+    }
+    if(l.isEmpty) l
+    else loop(l.head, l.tail,List())
+  }
 }
