@@ -1,5 +1,8 @@
 package working_with_lists
 
+/**
+  * Working with List
+  */
 object Problems extends App{
   /**
    * P01 (*) Find the last element of a list.
