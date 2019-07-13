@@ -1,5 +1,7 @@
 package working_with_lists
 
+import .reverse
+
 /**
   * Working with List
   * Here we are again
@@ -135,14 +137,10 @@ object Problems extends App{
    * res0: List[Int] = List(8, 5, 3, 2, 1, 1)
    */
   def reverse[T](l: List[T]): List[T] = {
-    @annotation.tailrec
-    def loop[T](acum: List[T], ls: List[T]): List[T] = {
-      ls match {
-        case Nil => acum
-        case (h :: tail) => loop(h :: acum, tail)
-      }
-    }    
-    loop(List(), l)
+    l match {
+      case Nil => List()
+      case  (h :: tail) => reverse(tail) ::: List(h)
+    }
   }
   
   def reverseBuiltIn[T](l: List[T]): List[T] = {
@@ -160,28 +158,25 @@ object Problems extends App{
   println("P05 " + reverseFunctional(List("Ana", "Lucia","Sofia", "Marta")))
   println("P05 " + reverse(List(1, 2, 3, 2, 1)))
   println("P05 " + reverse(List('r', 'e', 'c', 'o', 'n','o','c','e','r')))
-  println("**********************************")  
-  
+  println("**********************************")
+
   /**
-   * P06 (*) Find out whether a list is a palindrome.
-   * Example:
-   * scala> isPalindrome(List(1, 2, 3, 2, 1))
-   * scala> isPalindrome(List('r', 'e', 'c', 'o', 'n','o','c','e','r'))
-   * res0: Boolean = true
-   */
+    * P06 (*) Find out whether a list is a palindrome.
+    * Example:
+    * scala> isPalindrome(List(1, 2, 3, 2, 1))
+    * scala> isPalindrome(List('r', 'e', 'c', 'o', 'n','o','c','e','r'))
+    * res0: Boolean = true
+    */
   def isPalindrome[T](l: List[T]): Boolean = {
     @annotation.tailrec
-    def loop[T](ls: List[T], inv: List[T]): Boolean = {
-      ls match {
-        case Nil => true
-        case (h :: tail) => if(h == inv.head) loop(tail, inv.tail)
-                            else false                  
+    def loop[T](l: List[T], lrev: List[T]): Boolean = {
+      (l,lrev) match {
+        case(Nil,Nil) => true
+        case(h::t,hr::tr) => if(h == hr) loop(t,tr) else false
+        case _ => false
       }
     }
-    if(l.isEmpty) true
-    else {
-      loop(l, reverse(l))
-    }    
+    loop(l, l.reverse)
   }
   
   def isPalindromeB[T](l: List[T]): Boolean = {
@@ -192,6 +187,8 @@ object Problems extends App{
   println("P06 " + isPalindrome(List(1)))
   println("P06 " + isPalindrome(List(1,2)))
   println("P06 " + isPalindrome(List(1,2,1)))
+  println("P06: " + isPalindrome(List(1, 1, 2, 3, 5, 8)))
+  println("P06: " + isPalindrome(List(1, 2, 3, 2, 1)))
   println("**********************************") 
   
   /**
@@ -208,20 +205,31 @@ object Problems extends App{
   
   println("P07 " + flatten(List(List(1, 1), 2, List(3, List(5, 8)))))
   println("**********************************")
-  
+
   /**
-   * P08 (**) Eliminate consecutive duplicates of list elements.
-   * If a list contains repeated elements they should be replaced with a single copy of the element. The order of the elements should not be changed.
-   * Example:
-    
-   * scala> compress(List('a, 'a, 'a, 'a, 'b, 'c, 'c, 'a, 'a, 'd, 'e, 'e, 'e, 'e))
-   * res0: List[Symbol] = List('a, 'b, 'c, 'a, 'd, 'e)
-   */   
+    * P08 (**) Eliminate consecutive duplicates of list elements.
+    * If a list contains repeated elements they should be replaced with a single copy of the element.
+    * The order of the elements should not be changed.
+    * Example:
+    * scala> compress(List('a, 'a, 'a, 'a, 'b, 'c, 'c, 'a, 'a, 'd, 'e, 'e, 'e, 'e))
+    * res0: List[Symbol] = List('a, 'b, 'c, 'a, 'd, 'e)
+    */
   def compress[T](l: List[T]): List[T] = {
-    def loop[T](h: T, tail: List[T], acum: List[T]): List[T] = {
-      List()
+    l match {
+      case (h :: Nil) => List(h)
+      case (h :: tail) => if(h == tail.head) compress(tail) else h :: compress(tail)
+      case (Nil) => List()
     }
-    if(l.isEmpty) l
-    else loop(l.head, l.tail,List())
   }
+  println("P08: " + compress(List('a, 'a, 'a, 'a, 'b, 'c, 'c, 'a, 'a, 'd, 'e, 'e, 'e, 'e)))
+  println("**********************************")
+
+
+  /**
+    * P09 (**) Pack consecutive duplicates of list elements into sublists.
+    * If a list contains repeated elements they should be placed in separate sublists.
+    * Example:
+    * scala> pack(List('a, 'a, 'a, 'a, 'b, 'c, 'c, 'a, 'a, 'd, 'e, 'e, 'e, 'e))
+    * res0: List[List[Symbol]] = List(List('a, 'a, 'a, 'a), List('b), List('c, 'c), List('a, 'a), List('d), List('e, 'e, 'e, 'e))
+    */
 }
