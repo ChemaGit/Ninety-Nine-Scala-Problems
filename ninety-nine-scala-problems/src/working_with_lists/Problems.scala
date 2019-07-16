@@ -1,7 +1,5 @@
 package working_with_lists
 
-import .reverse
-
 /**
   * Working with List
   * Here we are again
@@ -232,4 +230,60 @@ object Problems extends App{
     * scala> pack(List('a, 'a, 'a, 'a, 'b, 'c, 'c, 'a, 'a, 'd, 'e, 'e, 'e, 'e))
     * res0: List[List[Symbol]] = List(List('a, 'a, 'a, 'a), List('b), List('c, 'c), List('a, 'a), List('d), List('e, 'e, 'e, 'e))
     */
-}
+    def  pack[T](l: List[T]):List[List[T]] = {
+      if(l == Nil) Nil
+      else {
+        val (packed, next) = l.span(v => v == l.head)
+        if(next == Nil) List(packed)
+        else packed :: pack(next)
+      }
+    }
+
+    println("P09: " + pack(List('a, 'a, 'a, 'a, 'b, 'c, 'c, 'a, 'a, 'd, 'e, 'e, 'e, 'e)))
+
+  /**
+    * P10 (*) Run-length encoding of a list.
+    * Use the result of problem P09 to implement the so-called run-length encoding data compression method.
+    * Consecutive duplicates of elements are encoded as tuples (N, E) where N is the number of duplicates of the element E.
+    * Example:
+    * scala> encode(List('a, 'a, 'a, 'a, 'b, 'c, 'c, 'a, 'a, 'd, 'e, 'e, 'e, 'e))
+    * res0: List[(Int, Symbol)] = List((4,'a), (1,'b), (2,'c), (2,'a), (1,'d), (4,'e))
+    */
+  def encode[T](l: List[T]): List[(Int,T)] = {
+    pack(l).map(ll => (ll.length,ll.head))
+  }
+  println("P010: " + encode(List('a, 'a, 'a, 'a, 'b, 'c, 'c, 'a, 'a, 'd, 'e, 'e, 'e, 'e)))
+
+  /**
+    * P11 (*) Modified run-length encoding.
+    * Modify the result of problem P10 in such a way that if an element has no duplicates it is simply copied into the result list.
+    * Only elements with duplicates are transferred as (N, E) terms.
+    * Example:
+    * scala> encodeModified(List('a, 'a, 'a, 'a, 'b, 'c, 'c, 'a, 'a, 'd, 'e, 'e, 'e, 'e))
+    * res0: List[Any] = List((4,'a), 'b, (2,'c), (2,'a), 'd, (4,'e))
+    */
+  def encodeModified[T](l: List[T]): List[Any] = {
+    pack(l).map(ll => {if(ll.length == 1) ll.head else (ll.length,ll.head)})
+  }
+  println("P011: " + encodeModified(List('a, 'a, 'a, 'a, 'b, 'c, 'c, 'a, 'a, 'd, 'e, 'e, 'e, 'e)))
+
+  /**
+    * P12 (**) Decode a run-length encoded list.
+    * Given a run-length code list generated as specified in problem P10, construct its uncompressed version.
+    * Example:
+    * scala> decode(List((4, 'a), (1, 'b), (2, 'c), (2, 'a), (1, 'd), (4, 'e)))
+    * res0: List[Symbol] = List('a, 'a, 'a, 'a, 'b, 'c, 'c, 'a, 'a, 'd, 'e, 'e, 'e, 'e)
+    */
+  def decode[T](l: List[(Int,T)]): List[T] = {
+    l match {
+      case Nil => Nil
+      case (h :: Nil) => if(h._1 == 1) h._2 :: decode(Nil) else h._2 :: decode(List( (h._1 - 1,h._2)))
+      case (h :: tail) => if(h._1 == 1) h._2 :: decode(tail) else h._2 :: decode((h._1 - 1,h._2):: tail )
+    }
+  }
+  def decodeBuiltIn[T](l: List[(Int,T)]): List[T] = {
+    l.flatMap({case(n,v) => List.fill(n)(v)})
+  }
+  println("P012: " + decode(List((4, 'a), (1, 'b), (2, 'c), (2, 'a), (1, 'd), (4, 'e))))
+  println("P012: " + decodeBuiltIn(List((4, 'a), (1, 'b), (2, 'c), (2, 'a), (1, 'd), (4, 'e))))
+ }
