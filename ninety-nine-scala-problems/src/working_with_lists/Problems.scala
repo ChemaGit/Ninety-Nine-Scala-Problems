@@ -286,4 +286,54 @@ object Problems extends App{
   }
   println("P012: " + decode(List((4, 'a), (1, 'b), (2, 'c), (2, 'a), (1, 'd), (4, 'e))))
   println("P012: " + decodeBuiltIn(List((4, 'a), (1, 'b), (2, 'c), (2, 'a), (1, 'd), (4, 'e))))
+
+  /**
+    * P13 (**) Run-length encoding of a list (direct solution).
+    * Implement the so-called run-length encoding data compression method directly.
+    * I.e. don't use other methods you've written (like P09's pack); do all the work directly.
+    * Example:
+    * scala> encodeDirect(List('a, 'a, 'a, 'a, 'b, 'c, 'c, 'a, 'a, 'd, 'e, 'e, 'e, 'e))
+    * res0: List[(Int, Symbol)] = List((4,'a), (1,'b), (2,'c), (2,'a), (1,'d), (4,'e))
+    */
+  def encodeDirect[T](l: List[T]): List[(Int,T)] = {
+    l match {
+      case Nil => Nil
+      case (h :: Nil) => List((1, h))
+      case (h :: tail) => {
+        val (packed, next) = l.span(v => v == h)
+        (packed.length,h) :: encodeDirect(next)
+      }
+    }
+  }
+  println("P013: " + encodeDirect(List('a, 'a, 'a, 'a, 'b, 'c, 'c, 'a, 'a, 'd, 'e, 'e, 'e, 'e)))
+
+  /**
+    * P14 (*) Duplicate the elements of a list.
+    * Example:
+    * scala> duplicate(List('a, 'b, 'c, 'c, 'd))
+    * res0: List[Symbol] = List('a, 'a, 'b, 'b, 'c, 'c, 'c, 'c, 'd, 'd)
+    */
+  def duplicate[T](l: List[T]): List[T] = {
+    l.flatMap(v => List(v,v))
+  }
+  println("P014: " + duplicate(List('a, 'b, 'c, 'c, 'd)))
+
+  /**
+    * P15 (**) Duplicate the elements of a list a given number of times.
+    * Example:
+    * scala> duplicateN(3, List('a, 'b, 'c, 'c, 'd))
+    * res0: List[Symbol] = List('a, 'a, 'a, 'b, 'b, 'b, 'c, 'c, 'c, 'c, 'c, 'c, 'd, 'd, 'd)
+    */
+  def duplicateN[T](n: Int, l: List[T]): List[T] = {
+    l.flatMap(v => List.fill(n)(v))
+  }
+  println("P015: " + duplicateN(3, List('a, 'b, 'c, 'c, 'd)))
+
+  /**
+    * P16 (**) Drop every Nth element from a list.
+    * Example:
+    * scala> drop(3, List('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k))
+    * res0: List[Symbol] = List('a, 'b, 'd, 'e, 'g, 'h, 'j, 'k)
+    */
  }
+
