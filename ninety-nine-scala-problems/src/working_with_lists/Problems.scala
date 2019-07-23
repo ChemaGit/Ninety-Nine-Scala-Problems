@@ -335,5 +335,106 @@ object Problems extends App{
     * scala> drop(3, List('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k))
     * res0: List[Symbol] = List('a, 'b, 'd, 'e, 'g, 'h, 'j, 'k)
     */
+  def drop[T](d: Int, l: List[T]):List[T] = {
+    def dropLoop[T](n: Int, loop: List[T]): List[T] = {
+      loop match {
+        case Nil => Nil
+        case (h :: Nil) => if (n == 1) dropLoop(d, Nil) else h :: dropLoop(n - 1, Nil)
+        case (h :: tail) => if (n == 1) dropLoop(d, tail) else h :: dropLoop(n - 1, tail)
+      }
+    }
+    dropLoop(d, l)
+  }
+  // Tail recursive.
+  def dropTailRecursive[A](n: Int, ls: List[A]): List[A] = {
+    @annotation.tailrec
+    def dropR(c: Int, curList: List[A], result: List[A]): List[A] = (c, curList) match {
+      case (_, Nil)       => result.reverse
+      case (1, _ :: tail) => dropR(n, tail, result)
+      case (_, h :: tail) => dropR(c - 1, tail, h :: result)
+    }
+    dropR(n, ls, Nil)
+  }
+
+  // Functional.
+  def dropFunctional[A](n: Int, ls: List[A]): List[A] =
+    ls.zipWithIndex filter { v => (v._2 + 1) % n != 0 } map { _._1 }
+
+  println("P016: " + drop(3, List('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k)))
+  println("P016: " + dropFunctional(3, List('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k)))
+  println("P016: " + dropTailRecursive(3, List('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k)))
+
+  /**
+    * P17 (*) Split a list into two parts.
+    * The length of the first part is given. Use a Tuple for your result.
+    * Example:
+    * scala> split(3, List('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k))
+    * res0: (List[Symbol], List[Symbol]) = (List('a, 'b, 'c),List('d, 'e, 'f, 'g, 'h, 'i, 'j, 'k))
+    */
+    def split[T](n: Int, l: List[T]): (List[T], List[T]) = {
+      def loop[T](d: Int,lf: (List[T],List[T]) ): (List[T],List[T]) = {
+        if(d == 0) (lf._1.reverse,lf._2)
+        else loop(d - 1, (lf._2.head :: lf._1, lf._2.tail) )
+      }
+      if(n > l.length) (l,Nil)
+      else if(l.isEmpty) (Nil,Nil)
+      else if (l.length == n) (l, Nil)
+      else {
+        loop(n - 1, (List(l.head),l.tail) )
+      }
+    }
+
+  // Builtin.
+  def splitBuiltin[T](n: Int, ls: List[T]): (List[T], List[T]) = ls.splitAt(n)
+  // Functional (barely not "builtin").
+  def splitFunctional[T](n: Int, ls: List[T]): (List[T], List[T]) = (ls.take(n), ls.drop(n))
+
+  println("P017: " + split(3, List('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k)))
+  println("P017: " + splitBuiltin(3, List('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k)))
+  println("P017: " + splitFunctional(3, List('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k)))
+
+  /**
+    * P18 (**) Extract a slice from a list.
+    * Given two indices, I and K, the slice is the list containing the elements from and including the Ith element up to but not including the Kth element of the original list.
+    * Start counting the elements with 0.
+    * Example:
+    * scala> slice(3, 7, List('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k))
+    * res0: List[Symbol] = List('d, 'e, 'f, 'g)
+    */
+  def slice[T](lb: Int, ub: Int, l: List[T]): List[T] = {
+    @annotation.tailrec
+    def loop[T](min: Int,max: Int,ll: List[T],acum: List[T]): List[T] = {
+      (min,max,ll) match {
+        case (0,1,h::tail) => h :: acum
+        case (0, _, h :: Nil) => h :: acum
+        case (0, _ ,h :: tail) => loop(min, max - 1, tail, h :: acum)
+        case (_, _, h :: tail) => loop(min - 1, max - 1, tail, acum)
+      }
+    }
+    if(lb > ub) List()
+    else loop(lb,ub,l,List()).reverse
+  }
+  // Builtin.
+  def sliceBuiltin[T](lb: Int, ub: Int, ls: List[T]): List[T] =
+    ls.slice(lb, ub)
+
+  // Functional.
+  def sliceFunctional[A](s: Int, e: Int, ls: List[A]): List[A] =
+    ls drop s take (e - (s max 0))
+
+  println("P018: " + slice(3, 7, List('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k)))
+  println("P018: " + sliceBuiltin(3, 7, List('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k)))
+  println("P018: " + sliceFunctional(3, 7, List('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k)))
+
+  /**
+    * P19 (**) Rotate a list N places to the left.
+    * Examples:
+    * scala> rotate(3, List('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k))
+    * res0: List[Symbol] = List('d, 'e, 'f, 'g, 'h, 'i, 'j, 'k, 'a, 'b, 'c)
+    * 
+    * scala> rotate(-2, List('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k))
+    * res1: List[Symbol] = List('j, 'k, 'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i)
+    */
+
  }
 
