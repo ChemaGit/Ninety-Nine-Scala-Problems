@@ -431,10 +431,32 @@ object Problems extends App{
     * Examples:
     * scala> rotate(3, List('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k))
     * res0: List[Symbol] = List('d, 'e, 'f, 'g, 'h, 'i, 'j, 'k, 'a, 'b, 'c)
-    * 
+    *
     * scala> rotate(-2, List('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k))
     * res1: List[Symbol] = List('j, 'k, 'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i)
     */
+  def rotate[T](n: Int, l: List[T]): List[T] = {
+    val bound = n % l.length
+    if(bound == 0 || l.isEmpty) l
+    else if(bound > 0) {
+      val (head, tail) = split(bound,l)
+      tail ::: head
+    } else {
+      val (h, t) = split(l.length + bound,l)
+      t ::: h
+    }
+  }
+  println("P019: " + rotate(3, List('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k)))
+  println("P019: " + rotate(-2, List('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k)))
+  println("P019: " + rotate(33, List('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k)))
+  println("P019: " + rotate(-34, List('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k)))
 
- }
+  /**
+    * P20 (*) Remove the Kth element from a list.
+    * Return the list and the removed element in a Tuple. Elements are numbered from 0.
+    * Example:
+    * scala> removeAt(1, List('a, 'b, 'c, 'd))
+    * res0: (List[Symbol], Symbol) = (List('a, 'c, 'd),'b)
+    */
+}
 
