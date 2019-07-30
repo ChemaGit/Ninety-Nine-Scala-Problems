@@ -458,5 +458,27 @@ object Problems extends App{
     * scala> removeAt(1, List('a, 'b, 'c, 'd))
     * res0: (List[Symbol], Symbol) = (List('a, 'c, 'd),'b)
     */
+  def removeAt[T](i: Int, l: List[T]): (List[T],T) = {
+    @annotation.tailrec
+    def loop(acum: List[T], l: List[T],index: Int): (List[T], T) = {
+      (l, index) match {
+        case (h :: Nil, 0) => (acum.reverse, h)
+        case (h :: tail, 0) => (acum.reverse ::: tail, h)
+        case (h :: tail, _) => loop(h :: acum, tail, index - 1)
+      }
+    }
+    if(i >= l.length) throw new NoSuchElementException
+    else if(i < 0) throw new NoSuchElementException
+    else loop(List(),l,i)
+   }
+  println("P020: " + removeAt(1, List('a, 'b, 'c, 'd)))
+  println("P020: " + removeAt(5, List('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k)))
+
+  /**
+    * P21 (*) Insert an element at a given position into a list.
+    * Example:
+    * scala> insertAt('new, 1, List('a, 'b, 'c, 'd))
+    * res0: List[Symbol] = List('a, 'new, 'b, 'c, 'd)
+    */
 }
 
