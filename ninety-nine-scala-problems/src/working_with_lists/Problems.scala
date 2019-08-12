@@ -498,5 +498,14 @@ object Problems extends App{
     * scala> range(4, 9)
     * res0: List[Int] = List(4, 5, 6, 7, 8, 9)
     */
+  def range(lowerBound: Int, upperBound: Int): List[Int] = {
+    (lowerBound, upperBound) match {
+      case(_, _) => {
+        if(lowerBound == upperBound) List(lowerBound)
+        else lowerBound :: range(lowerBound + 1, upperBound)
+      }
+    }
+  }
+  println("P022: " + range(4, 9))
 }
 
