@@ -506,6 +506,16 @@ object Problems extends App{
       }
     }
   }
+  def rangeBuiltin(start: Int, end: Int): List[Int] = List.range(start, end + 1)
+  def rangeTailRecursive(start: Int, end: Int): List[Int] = {
+    @annotation.tailrec
+    def loop(s: Int,e: Int, accum: List[Int]): List[Int] = {
+      if(s == e) s :: accum
+      else loop(s + 1, e, s :: accum)
+    }
+    loop(start, end, List()).reverse
+  }
   println("P022: " + range(4, 9))
+  println("P022: " + rangeTailRecursive(4, 9))
 }
 
