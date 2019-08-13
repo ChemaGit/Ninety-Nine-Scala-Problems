@@ -517,5 +517,35 @@ object Problems extends App{
   }
   println("P022: " + range(4, 9))
   println("P022: " + rangeTailRecursive(4, 9))
+
+  /**
+    * (**) Extract a given number of randomly selected elements from a list.
+    * Example:
+    *
+    * scala> randomSelect(3, List('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h))
+    * res0: List[Symbol] = List('e, 'd, 'a)
+    *
+    * Hint: Use the solution to problem P20
+    */
+  def randomSelect[T](num: Int, ls: List[T]): List[T] = {
+    def loop[T](n: Int, l: List[T],r: util.Random): List[T] = {
+      if(n <= 0) Nil
+      else {
+        val (rest, e) = removeAt(r.nextInt(l.length), l)
+        e :: loop(n - 1, rest,r)
+      }
+    }
+    loop(num, ls,new util.Random)
+  }
+  println("P023: " + randomSelect(3, List('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h)))
+
+  /**
+    * P24 (*) Lotto: Draw N different random numbers from the set 1..M.
+    * Example:
+    *
+    * scala> lotto(6, 49)
+    * res0: List[Int] = List(23, 1, 17, 33, 21, 37)
+    */
+
 }
 
