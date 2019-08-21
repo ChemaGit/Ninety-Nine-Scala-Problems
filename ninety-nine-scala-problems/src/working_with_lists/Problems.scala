@@ -546,6 +546,31 @@ object Problems extends App{
     * scala> lotto(6, 49)
     * res0: List[Int] = List(23, 1, 17, 33, 21, 37)
     */
+  def lotto(n: Int, m: Int): List[Int] = {
+    val r = scala.util.Random
+    @annotation.tailrec
+    def loop(n: Int,m: Int,accum: List[Int], random: scala.util.Random): List[Int] = {
+      n match {
+        case 0 => accum
+        case _ => loop(n-1,m,1 + random.nextInt(m - 1):: accum,random)
+      }
+    }
+    loop(n,m,List(),r)
+  }
+  println("P024: " + lotto(6, 49))
 
+  /**
+    * P25 (*) Generate a random permutation of the elements of a list.
+    * Hint: Use the solution of problem P23.
+    * Example:
+    *
+    * scala> randomPermute(List('a, 'b, 'c, 'd, 'e, 'f))
+    * res0: List[Symbol] = List('b, 'a, 'd, 'c, 'e, 'f)
+    */
+  def randomPermute[T](l: List[T]): List[T] = {
+    Problems.randomSelect(l.length,l)
+  }
+  println("P025: " + randomPermute(List(1,2,3,4,5,6)))
+  println("P025: " + randomPermute(List('a, 'b, 'c, 'd, 'e, 'f)))
 }
 
